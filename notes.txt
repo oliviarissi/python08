@@ -1,0 +1,116 @@
+
+2. What is pip?
+
+pip is Python’s traditional package manager.
+It installs libraries into your environment.
+
+pip install -r requirements.txt
+
+
+
+3. What is requirements.txt?
+
+A text file listing dependencies.
+This lets someone recreate the same environment.
+- reproducibility
+- everyone uses same versions
+
+
+
+4. What is Poetry?
+
+Poetry is an alternative to pip
+Poetry is a newer tool that:
+
+manages dependencies
+manages virtual environments
+manages project metadata
+
+
+
+5. What is pyproject.toml?
+
+Modern Python project configuration file.
+it defines project dependencies
+Poetry reads it
+
+
+
+
+9. NumPy Basics
+
+Examples of concepts:
+
+np.array(...)
+np.random.rand(...)
+np.random.randint(...)
+
+
+
+0. Pandas Basics
+
+Pandas is for working with tables/data.
+
+spreadsheet-like data
+rows and columns
+inspect data
+calculate averages
+summarize information
+
+
+
+11. Matplotlib Basics
+
+Matplotlib creates graphs.
+
+
+
+NumPy generates/calculates
+↓
+Pandas organizes/analyzes
+↓
+Matplotlib visualizes
+
+
+
+
+13. Command Line Basics
+
+python3 -m venv matrix_env
+source venv/bin/activate
+pip list
+
+python loading.py
+
+pip install -r requirements.txt
+python loading.py
+
+poetry install
+poetry run python loading.py
+
+
+pip:
+you control the environment manually
+must activate venv yourself
+Poetry:
+creates and manages environment automatically
+isolates everything per project
+
+pip → installs into global / venv manually
+Poetry → manages isolated environment + lockfile
+
+
+
+
+SHIT - EX01 doesnt give specific task, that is not a task to complete, but task to create a task.
+Create a data analysis program called loading.py that:
+• Uses pandas for data manipulation
+• Uses numpy for numerical computations and to generate your simulated Matrix
+data. It must be the source of your dataset — not hardcoded lists or range().
+• Uses matplotlib for visualization
+• Demonstrates the difference between pip and Poetry dependency management
+• Includes proper dependency files for both approaches
+Your program should analyze "Matrix data" (you can simulate this with sample data)
+and generate a simple visualization.
+By default, simulate your Matrix data using numpy. If you choose to fetch real data from
+an external API, you are allowed to use requests — but it is not required.
