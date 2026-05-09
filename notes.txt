@@ -114,3 +114,206 @@ Your program should analyze "Matrix data" (you can simulate this with sample dat
 and generate a simple visualization.
 By default, simulate your Matrix data using numpy. If you choose to fetch real data from
 an external API, you are allowed to use requests — but it is not required.
+
+
+
+1. Environment Variables (VERY IMPORTANT)
+What they are
+
+Environment variables are settings stored outside your code, in the operating system.
+
+Example:
+
+API_KEY=abc123
+
+Your Python program reads them at runtime.
+
+Why they exist
+
+So you don’t hardcode secrets like:
+
+❌ bad:
+
+api_key = "abc123"
+
+✔ good:
+
+api_key = os.getenv("API_KEY")
+
+
+2. .env files
+What is a .env file?
+
+A simple text file that stores environment variables:
+
+API_KEY=abc123
+DATABASE_URL=postgres://localhost
+MATRIX_MODE=development
+
+It is NOT Python code.
+
+Why it exists
+
+Because:
+
+easier for developers
+keeps secrets outside code
+different configs per environment
+
+3. python-dotenv
+
+Normally Python cannot read .env files automatically.
+
+So we use:
+
+python-dotenv
+
+It loads .env into environment variables.
+
+Conceptually:
+.env file → python-dotenv → os.environ → your program
+
+4. os.getenv()
+
+This is how you read environment variables in Python:
+
+import os
+
+api_key = os.getenv("API_KEY")
+
+If missing:
+
+None
+
+So you must handle missing values.
+
+5. Development vs Production Config
+
+This is a HUGE real-world concept.
+
+Development:
+debug mode
+local database
+verbose logs
+Production:
+real database
+strict logging
+secure settings
+
+Example:
+
+MATRIX_MODE=development
+
+or:
+
+MATRIX_MODE=production
+
+Why this matters
+
+Same code, different behavior depending on environment.
+
+
+6. Configuration Priority (VERY IMPORTANT)
+
+The exercise says:
+
+environment variables override .env
+
+So priority is:
+
+1. real environment variables (terminal export / inline)
+2. .env file
+3. defaults in code
+
+7. Missing Configuration Handling
+
+You must understand:
+
+os.getenv("API_KEY")
+
+can return:
+
+a value → OK
+None → missing
+
+So you must handle:
+
+if api_key is None:
+    print("Missing API_KEY")
+
+
+8. .gitignore
+What it is
+
+A file that tells Git:
+
+“Do NOT track these files”
+
+Example:
+
+.env
+Why this is critical
+
+Because .env contains secrets:
+
+API keys
+passwords
+database URLs
+
+You NEVER want to upload them to GitHub.
+
+
+10. File Operations (basic idea)
+
+You may need:
+
+reading files
+checking existence
+
+Example:
+
+open(".env")
+
+or:
+
+os.path.exists(".env")
+
+
+11. Core Mental Model of This Exercise
+
+This is the most important part:
+
+.env file
+   ↓
+python-dotenv loads it
+   ↓
+os.environ stores values
+   ↓
+your program reads them
+   ↓
+behaviour changes (dev vs prod)
+
+🧠 Summary (what to focus on)
+
+Before coding, understand:
+
+Must know:
+os.getenv()
+.env files
+python-dotenv
+missing values handling
+dev vs prod configs
+Important mindset:
+
+code should never contain secrets
+
+
+⚙️ Key Design Principle (VERY IMPORTANT)
+
+Environment variables ALWAYS override .env
+
+So logic is:
+
+system env > .env > defaults
+
+But python-dotenv already helps with that automatically.
