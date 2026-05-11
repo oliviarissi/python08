@@ -1,19 +1,18 @@
 
 2. What is pip?
 
-pip is Python’s traditional package manager.
-It installs libraries into your environment.
+    pip is Python’s traditional package manager.
+    It installs libraries into your environment.
 
-pip install -r requirements.txt
-
+    pip install -r requirements.txt
 
 
 3. What is requirements.txt?
 
-A text file listing dependencies.
-This lets someone recreate the same environment.
-- reproducibility
-- everyone uses same versions
+    A text file listing dependencies.
+    This lets someone recreate the same environment.
+    - reproducibility
+    - everyone uses same versions
 
 
 
@@ -317,3 +316,17 @@ So logic is:
 system env > .env > defaults
 
 But python-dotenv already helps with that automatically.
+
+
+
+What load_dotenv() actually does
+
+When you call:
+
+load_dotenv()
+
+the library:
+
+opens .env
+reads each line
+adds variables into the process environment

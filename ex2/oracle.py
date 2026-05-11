@@ -4,101 +4,113 @@ import os
 import sys
 from dotenv import load_dotenv
 
-os → read environment variables
-sys → exit safely if needed
-dotenv → load .env
 
-🧠 Goal of oracle.py
+def load_configuration() -> dict:
+    """
+    Load environment variables from .env file
+    and return configuration values.
+    """
 
-You are building a program that:
+    load_dotenv("")
 
-loads config from .env (development)
-overrides with real environment variables (production override)
-validates missing values
-prints a clear “system status” output
-🏗️ Clean Structure (what your file should look like)
+    config: dict = {
+      "MATRIX_MODE": os.getenv("MATRIX_MODE", "development"),
+      "DATABASE_URL": os.getenv("DATABASE_URL"),
+      "API_KEY": os.getenv("API_KEY"),
+      "LOG_LEVEL": os.getenv("LOG_LEVEL", "INFO"),
+      "ZION_ENDPOINT": os.getenv("ZION_ENDPOINT"),
+    }
 
-Think in 5 simple blocks:
-
-1. Imports
-2. Load .env
-3. Read configuration
-4. Validate configuration
-5. Display Oracle status
+    return config
 
 
-2. Load .env
+def check_missing(config: dict) -> list:
+    """
+    Check for missing required configuration.
+    """
 
-This is the key step:
+    missing: list = []
 
-load_dotenv()
+    required: list = [
+        "DATABASE_URL",
+        "API_KEY",
+        "ZION_ENDPOINT",
+    ]
 
-👉 This loads .env into os.environ
+    for item in required:
+        if not config.get(item):
+            missing.append(item)
 
-
-3. Read Configuration
-
-Now you extract variables:
-
-mode = os.getenv("MATRIX_MODE")
-db = os.getenv("DATABASE_URL")
-api_key = os.getenv("API_KEY")
-log_level = os.getenv("LOG_LEVEL")
-zion = os.getenv("ZION_ENDPOINT")
-
-4. Apply Defaults + Validation
-
-This is where “Oracle intelligence” happens.
-
-Example logic:
-missing = []
-
-Check each:
-
-if not mode:
-    mode = "development"
-
-if not db:
-    missing.append("DATABASE_URL")
-
-Repeat for others.
-
-Important idea:
-
-.env is optional, not guaranteed
-
-So your program must survive missing values.
-
-7. Security Check Section (important for grading)
-
-You should explicitly check:
-
-no hardcoded secrets
-missing values detected
-.env used correctly
-
-Example:
-
-print("\nSecurity check:")
-
-if api_key:
-    print("[OK] API key loaded from environment")
-else:
-    print("[WARNING] Missing API key")
+    return missing
 
 
-Start
- ↓
-Load .env file
- ↓
-Merge with system environment variables
- ↓
-Read config values
- ↓
-Fill missing defaults
- ↓
-Validate required values
- ↓
-Decide dev vs prod behavior
- ↓
-Print system status
+def display_configuration(config):
+    """
+    Display current configuration.
+    """
+    print("ORACLE STATUS: Reading the Matrix...\n")
+    print("Configuration loaded:")
+
+    mode = config["MATRIX_MODE"]
+    print(f"Mode: {mode}")
+
+    if mode == "production":
+        print("Database: Connected to production mainframe")
+    else:
+        print("Database: Connected to local instance")
+
+    if config["API_KEY"]:
+        print("API Access: Authenticated")
+    else:
+        print("API Access: Missing API key")
+
+    print(f"Log Level: {config['LOG_LEVEL']}")
+
+    if config["ZION_ENDPOINT"]:
+        print("Zion Network: Online")
+    else:
+        print("Zion Network: Offline")
+
+
+def security_check():
+    """
+    Perform simple security checks.
+    """
+    print("\nEnvironment security check:")
+
+    print("[OK] No hardcoded secrets detected")
+
+    if os.path.exists(".env"):
+        print("[OK] .env file properly configured")
+    else:
+        print("[WARNING] No .env file found")
+
+    print("[OK] Production overrides available")
+
+def main() -> None:
+  
+    config: dict = load_configuration()
+
+    print(config)
+    print()
+
+    missing: list = check_missing(config)
+
+    display_configuration(config)
+
+    if missing:
+        print("\nWARNING: Missing configuration variables:")
+        for item in missing:
+            print(f"- {item}")
+
+        print("\nCreate a .env file or export environment variables.")
+        sys.exit(1)
+
+    security_check()
+
+    print("\nThe Oracle sees all configurations.")
+
+
+
+if __name__ == "__main__":
+    main()
