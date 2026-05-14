@@ -1,115 +1,67 @@
 #!/usr/bin/env python3
 
 import os
-import sys
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # type: ignore[import-not-found]
 
 
-def load_configuration() -> dict:
-    """
-    Load environment variables from .env file
-    and return configuration values.
-    """
+def security_check() -> None:
 
-    load_dotenv("")
-
-    config: dict = {
-      "MATRIX_MODE": os.getenv("MATRIX_MODE", "development"),
-      "DATABASE_URL": os.getenv("DATABASE_URL"),
-      "API_KEY": os.getenv("API_KEY"),
-      "LOG_LEVEL": os.getenv("LOG_LEVEL", "INFO"),
-      "ZION_ENDPOINT": os.getenv("ZION_ENDPOINT"),
-    }
-
-    return config
-
-
-def check_missing(config: dict) -> list:
-    """
-    Check for missing required configuration.
-    """
-
-    missing: list = []
-
-    required: list = [
-        "DATABASE_URL",
-        "API_KEY",
-        "ZION_ENDPOINT",
-    ]
-
-    for item in required:
-        if not config.get(item):
-            missing.append(item)
-
-    return missing
-
-
-def display_configuration(config):
-    """
-    Display current configuration.
-    """
-    print("ORACLE STATUS: Reading the Matrix...\n")
-    print("Configuration loaded:")
-
-    mode = config["MATRIX_MODE"]
-    print(f"Mode: {mode}")
-
-    if mode == "production":
-        print("Database: Connected to production mainframe")
-    else:
-        print("Database: Connected to local instance")
-
-    if config["API_KEY"]:
-        print("API Access: Authenticated")
-    else:
-        print("API Access: Missing API key")
-
-    print(f"Log Level: {config['LOG_LEVEL']}")
-
-    if config["ZION_ENDPOINT"]:
-        print("Zion Network: Online")
-    else:
-        print("Zion Network: Offline")
-
-
-def security_check():
-    """
-    Perform simple security checks.
-    """
     print("\nEnvironment security check:")
 
     print("[OK] No hardcoded secrets detected")
 
     if os.path.exists(".env"):
         print("[OK] .env file properly configured")
+        print("[OK] Production overrides available")
+        print("\nThe Oracle sees all configurations.")
     else:
         print("[WARNING] No .env file found")
+        print("[OK] Production overrides available")
 
-    print("[OK] Production overrides available")
 
 def main() -> None:
-  
-    config: dict = load_configuration()
 
-    print(config)
-    print()
+    load_dotenv()
 
-    missing: list = check_missing(config)
+    print("ORACLE STATUS: Reading the Matrix...\n")
+    print("Configuration loaded:")
 
-    display_configuration(config)
+    matrix_mode = os.getenv("MATRIX_MODE")
+    if matrix_mode is None:
+        matrix_mode = "development"
+        print("Mode: development [DEFAULT]")
+    else:
+        print(f"Mode: {matrix_mode}")
 
-    if missing:
-        print("\nWARNING: Missing configuration variables:")
-        for item in missing:
-            print(f"- {item}")
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        if matrix_mode == "production":
+            print("Database: Connected to production mainframe")
+        else:
+            print("Database: Connected to local instance")
+    else:
+        print("Database: [MISSING]")
 
-        print("\nCreate a .env file or export environment variables.")
-        sys.exit(1)
+    api_key = os.getenv("API_KEY")
+    if api_key:
+        print("API Access: Authenticated")
+    else:
+        print("API Access: [MISSING]")
+
+    log_level = os.getenv("LOG_LEVEL")
+    if log_level is None:
+        log_level = "INFO"
+        print("Log Level: INFO [DEFAULT]")
+    else:
+        print(f"Log Level: {log_level}")
+
+    zion_endpoint = os.getenv("ZION_ENDPOINT")
+    if zion_endpoint:
+        print("Zion Network: Online")
+    else:
+        print("Zion Network: Offline [MISSING]")
 
     security_check()
-
-    print("\nThe Oracle sees all configurations.")
-
 
 
 if __name__ == "__main__":

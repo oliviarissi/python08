@@ -1,28 +1,31 @@
 #!/usr/bin/env python3
 
-def dependencies_comparison() -> dict:
+from typing import Any
 
-    available: dict = {}
+
+def dependencies_comparison() -> dict[str, Any]:
+
+    available: dict[str, Any] = {}
 
     print("Checking dependencies:")
 
     try:
-        import numpy as np
+        import numpy as np  # type: ignore[import-not-found]
         print(f"[OK] numpy ({np.__version__}) - Numerical computation ready")
         available["numpy"] = np
     except ImportError:
         print("[MISSING] numpy")
 
     try:
-        import pandas as pd
+        import pandas as pd  # type: ignore[import-untyped]
         print(f"[OK] pandas ({pd.__version__}) - Data manipulation ready")
         available["pandas"] = pd
     except ImportError:
         print("[MISSING] pandas")
 
     try:
-        import matplotlib
-        import matplotlib.pyplot as plt
+        import matplotlib  # type: ignore[import-not-found]
+        import matplotlib.pyplot as plt  # type: ignore[import-not-found]
         print(
             f"[OK] matplotlib ({matplotlib.__version__}) - Visualization ready"
         )
@@ -39,7 +42,7 @@ def main() -> None:
 
     print("\nLOADING STATUS: Loading programs...\n")
 
-    modules: dict = dependencies_comparison()
+    modules: dict[str, Any] = dependencies_comparison()
 
     if len(modules) < 3:
         print(
