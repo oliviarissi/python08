@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-from dotenv import load_dotenv  # type: ignore[import-not-found]
+import sys
 
 
 def security_check() -> None:
@@ -20,6 +20,12 @@ def security_check() -> None:
 
 
 def main() -> None:
+
+    try:
+        from dotenv import load_dotenv  # type: ignore[import-not-found]
+    except ImportError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     load_dotenv()
 

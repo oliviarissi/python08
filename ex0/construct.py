@@ -28,8 +28,7 @@ else:
     print(f"Virtual Environment: {os.path.basename(sys.prefix)}")
     print(f"Environment Path: {sys.prefix}\n")
     print("""SUCCESS: You're in an isolated environment!
-Safe to install packages without affecting
-the global system.
+Safe to install packages without affecting the global system.
 
 Package installation path:""")
     print(site.getsitepackages()[0])
